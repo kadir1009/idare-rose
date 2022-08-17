@@ -121,7 +121,7 @@ def send_help(chat_id, text, keyboard=None):
 def test(bot: Bot, update: Update):
     # pprint(eval(str(update)))
     # update.effective_message.reply_text("Hola tester! _I_ *have* `markdown`", parse_mode=ParseMode.MARKDOWN)
-    update.effective_message.reply_text("This person edited a message")
+    update.effective_message.reply_text("Bir kişi mesajı düzenledi.")
     print(update.effective_message)
 
 
@@ -150,9 +150,9 @@ def start(bot: Bot, update: Update, args: List[str]):
                 PM_START_TEXT.format(escape_markdown(first_name), escape_markdown(bot.first_name), OWNER_ID),
 
                 parse_mode=ParseMode.MARKDOWN, reply_markup=InlineKeyboardMarkup(
-                    [[InlineKeyboardButton(text="🎉 Add me to your group", url="t.me/{}?startgroup=true".format(bot.username)),  InlineKeyboardButton(text="🤖 Make Own Admin Bot", url="https://youtu.be/W6CLKrehy6w")],
-                     [InlineKeyboardButton(text="👥 Support Group", url="https://t.me/Mo_Tech_Group"), InlineKeyboardButton(text="🔔 Update Channel", url="https://t.me/Mo_Tech_YT")],
-                     [InlineKeyboardButton(text="👨‍💻 Make", url="https://youtu.be/wKL90i3cjPw"), InlineKeyboardButton(text="🛠 Help", url="https://t.me/{}?start=help".format(bot.username)) ]]))
+                    [[InlineKeyboardButton(text="🎉 Gruba Ekle", url="t.me/{}?startgroup=true".format(bot.username)),  InlineKeyboardButton(text="🤖 Başkan Forum", url="https://www.baskanforum.com")],
+                     [InlineKeyboardButton(text="👥 Parti Grubu", url="https://t.me/+z4xWX8T6Cy03MmJk"), InlineKeyboardButton(text="🔔 Başkan Online", url="https://baskan.app")],
+                     [InlineKeyboardButton(text="👨‍💻 Yapılış", url="https://youtu.be/wKL90i3cjPw"), InlineKeyboardButton(text="🛠 Yardım", url="https://t.me/{}?start=help".format(bot.username)) ]]))
 
     else:
         update.effective_message.reply_text("ചത്തിട്ടില്ലാ...")
@@ -227,11 +227,11 @@ def help_button(bot: Bot, update: Update):
         bot.answer_callback_query(query.id)
         query.message.delete()
     except BadRequest as excp:
-        if excp.message == "Message is not modified":
+        if excp.message == "Mesaj düzenlenemedi":
             pass
         elif excp.message == "Query_id_invalid":
             pass
-        elif excp.message == "Message can't be deleted":
+        elif excp.message == "Mesaj silinemedi":
             pass
         else:
             LOGGER.exception("Exception in help buttons. %s", str(query.data))

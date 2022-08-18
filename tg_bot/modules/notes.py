@@ -60,9 +60,9 @@ def get(bot, update, notename, show_none=True, no_format=False):
                 try:
                     bot.forward_message(chat_id=update.effective_chat.id, from_chat_id=MESSAGE_DUMP, message_id=note.value)
                 except BadRequest as excp:
-                    if excp.message == "Message to forward not found":
-                        message.reply_text("This message seems to have been lost - I'll remove it "
-                                           "from your notes list.")
+                    if excp.message == "İletilecek mesaj bulunamadı":
+                        message.reply_text("Bu mesaj kaybolmuş gibi görünüyor - Notlar "
+                                           "listesinden kaldıracağım.")
                         sql.rm_note(chat_id, notename)
                     else:
                         raise
@@ -70,11 +70,11 @@ def get(bot, update, notename, show_none=True, no_format=False):
                 try:
                     bot.forward_message(chat_id=update.effective_chat.id, from_chat_id=chat_id, message_id=note.value)
                 except BadRequest as excp:
-                    if excp.message == "Message to forward not found":
-                        message.reply_text("Looks like the original sender of this note has deleted "
-                                           "their message - sorry! Get your bot admin to start using a "
-                                           "message dump to avoid this. I'll remove this note from "
-                                           "your saved notes.")
+                    if excp.message == "İletilecek mesaj bulunamadı":
+                        message.reply_text("Bu notu ilk gönderen kişi mesajını silmiş gibi görünüyor "
+                                           "Üzgünüm! Bunu önlemek için bot yöneticinizin "
+                                           "bir mesaj dökümü kullanmaya başlamasını sağlayın. "
+                                           "Bu notu, kayıtlı notlarınızdan kaldıracağım.")
                         sql.rm_note(chat_id, notename)
                     else:
                         raise
@@ -122,7 +122,7 @@ def get(bot, update, notename, show_none=True, no_format=False):
                     LOGGER.warning("Message was: %s", str(note.value))
         return
     elif show_none:
-        message.reply_text("This note doesn't exist")
+        message.reply_text("Bu not mevcut değil")
 
 
 @run_async

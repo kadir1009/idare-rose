@@ -68,16 +68,16 @@ def send(update, message, keyboard, backup_message):
                                                       parse_mode=ParseMode.MARKDOWN)
             LOGGER.warning(message)
             LOGGER.warning(keyboard)
-            LOGGER.exception("Could not parse! got invalid url host errors")            
-        elif excp.message == "Replied message not found":
-            LOGGER.warning("Original message deleted")            
-        elif excp.message == "Have no rights to send a message":
-            LOGGER.warning("Muted in below chat")
+            LOGGER.exception("Ayrıştırılamadı! geçersiz url ana sunucu hataları var")            
+        elif excp.message == "Cevaplanan mesaj bulunamadı":
+            LOGGER.warning("Orijinal mesaj silindi")            
+        elif excp.message == "Mesaj gönderme hakkın yok":
+            LOGGER.warning("Aşağıdaki sohbette sessize alındı")
             print(update.effective_message.chat.id)
         else:
             msg = update.effective_message.reply_text(markdown_parser(backup_message +
-                                                                      "\nNote: An error occured when sending the "
-                                                                      "custom message. Please update."),
+                                                                      "\nNote: Özel mesaj gönderilirken "
+                                                                      "hata oluştu. Lütfen güncelleyin."),
                                                       parse_mode=ParseMode.MARKDOWN)
             LOGGER.exception()
 
@@ -94,14 +94,14 @@ def del_joined(bot: Bot, update: Update, args: List[str]) -> str:
     if not args:
         del_pref = sql.get_del_pref(chat.id)
         if del_pref:
-            update.effective_message.reply_text("I should be deleting `user` joined the chat messages now.")
+            update.effective_message.reply_text("Gruba kullanı katıldı mesajlarını silmeliydim.")
         else:
-            update.effective_message.reply_text("I'm currently not deleting old joined messages!")
+            update.effective_message.reply_text("Şu anda gruba katılım mesajlarını silmiyorum!")
         return ""
 
     if args[0].lower() in ("on", "yes"):
         sql.set_del_joined(str(chat.id), True)
-        update.effective_message.reply_text("I'll try to delete old joined messages!")
+        update.effective_message.reply_text("Gruba katılım mesajlarını silmeye çalışacağım!")
         return "<b>{}:</b>" \
                "\n#CLEAN_SERVICE_MESSAGE" \
                "\n<b>Admin:</b> {}" \
@@ -412,11 +412,11 @@ def reset_goodbye(bot: Bot, update: Update) -> str:
     chat = update.effective_chat  # type: Optional[Chat]
     user = update.effective_user  # type: Optional[User]
     sql.set_custom_gdbye(chat.id, sql.DEFAULT_GOODBYE, sql.Types.TEXT)
-    update.effective_message.reply_text("Successfully reset goodbye message to default!")
+    update.effective_message.reply_text("Hoşçakal mesajını başarıyla sıfırlandı!")
     return "<b>{}:</b>" \
            "\n#RESET_GOODBYE" \
            "\n<b>Admin:</b> {}" \
-           "\nReset the goodbye message.".format(html.escape(chat.title),
+           "\nGüle güle mesajı güncellendi.".format(html.escape(chat.title),
                                                  mention_html(user.id, user.first_name))
 
 
@@ -430,7 +430,7 @@ def clean_welcome(bot: Bot, update: Update, args: List[str]) -> str:
     if not args:
         clean_pref = sql.get_clean_pref(chat.id)
         if clean_pref:
-            update.effective_message.reply_text("I should be deleting welcome messages up to two days old.")
+            update.effective_message.reply_text("İki güne kadar olan karşılama mesajlarını silmeliyim.")
         else:
             update.effective_message.reply_text("I'm currently not deleting old welcome messages!")
         return ""
@@ -515,15 +515,15 @@ __help__ = """
 {}
 
 *Admin only:*
- - /welcome <on/off>: enable/disable welcome messages.
- - /welcome: shows current welcome settings.
- - /welcome noformat: shows current welcome settings, without the formatting - useful to recycle your welcome messages!
- - /goodbye -> same usage and args as /welcome.
- - /setwelcome <sometext>: set a custom welcome message. If used replying to media, uses that media.
- - /setgoodbye <sometext>: set a custom goodbye message. If used replying to media, uses that media.
- - /resetwelcome: reset to the default welcome message.
- - /resetgoodbye: reset to the default goodbye message.
- - /cleanwelcome <on/off>: On new member, try to delete the previous welcome message to avoid spamming the chat.
+ - /welcome <on/off>: karşılama mesajlarını etkinleştirin/devre dışı bırakın.
+ - /welcome: mevcut karşılama ayarlarını gösterir.
+ - /welcome noformat: biçimlendirme olmadan mevcut karşılama ayarlarını gösterir - karşılama mesajlarınızı sıfırlamak için kullanışlıdır!
+ - /goodbye -> /welcome ile aynı kullanım ve argümanlar.
+ - /setwelcome <sometext>: özel bir karşılama mesajı ayarlayın. Medyaya yanıt vermek için kullanılıyorsa, o medyayı kullanır.
+ - /setgoodbye <sometext>: özel bir veda mesajı ayarlayın. Medyaya yanıt vermek için kullanılıyorsa, o medyayı kullanır.
+ - /resetwelcome: varsayılan karşılama mesajına sıfırla.
+ - /resetgoodbye: varsayılan hoşçakal mesajına sıfırla.
+ - /cleanwelcome <on/off>: Yeni üyede, sohbeti spam yapmaktan kaçınmak için önceki karşılama mesajını silin.
  - /rmjoin <on/off>: when someone joins, try to delete the *user* joined the group message.
  - /welcomehelp: view more formatting information for custom welcome/goodbye messages.
 
